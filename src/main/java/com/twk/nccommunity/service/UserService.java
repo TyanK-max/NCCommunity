@@ -38,7 +38,7 @@ public class UserService implements CommunityConstant {
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
-    public User findPostById(int userId) {
+    public User findUserById(int userId) {
         return userMapper.selectById(userId);
     }
 
@@ -50,6 +50,11 @@ public class UserService implements CommunityConstant {
         return userMapper.selectByName(username);
     }
 
+    /**
+     * 注册用户功能
+     *
+     * @param user 一个用户对象
+     */
     public Map<String, Object> register(User user) {
         HashMap<String, Object> map = new HashMap<>();
         if (user == null) {
@@ -99,6 +104,12 @@ public class UserService implements CommunityConstant {
         return map;
     }
 
+    /**
+     * 激活用户功能
+     *
+     * @param userId 用户ID
+     * @param code   用户邮件验证码
+     */
     public int activation(int userId, String code) {
         User user = userMapper.selectById(userId);
         if (user.getStatus() == 1) {
@@ -111,6 +122,13 @@ public class UserService implements CommunityConstant {
         }
     }
 
+    /**
+     * 验证登录并获取登陆凭证功能
+     *
+     * @param username       用户名
+     * @param password       密码
+     * @param expiredSeconds 登陆凭证有效期
+     */
     public Map<String, Object> login(String username, String password, int expiredSeconds) {
         Map<String, Object> map = new HashMap<>();
         if (StringUtils.isBlank(username)) {
@@ -140,13 +158,58 @@ public class UserService implements CommunityConstant {
         ticket.setStatus(0);
         ticket.setExpired(new Date(System.currentTimeMillis() + expiredSeconds * 1000));
         loginTicketMapper.InsertLoginTicket(ticket);
-        map.put("ticket",ticket.getTicket());
+        map.put("ticket", ticket.getTicket());
         return map;
     }
 
-    public void logout(String ticket){
-        loginTicketMapper.updateStatus(ticket,1);
+    /**
+     * 登出功能
+     *
+     * @param ticket 登录凭证
+     */
+    public void logout(String ticket) {
+        loginTicketMapper.updateStatus(ticket, 1);
     }
 
+    /**
+     * 查找登录凭证
+     *
+     * @param ticket 凭证
+     * @return LoginTicket 对象
+     */
+    public LoginTicket findLoginTicket(String ticket) {
+        return loginTicketMapper.selectByLoginTicket(ticket);
+    }
 
+    /**
+     * 更新用户头像
+     * @param userId 用户id
+     * @param headerUrl 用户头像地址
+     */
+    public int updateHeaderUrl(int userId,String headerUrl){
+        return userMapper.updateHeader(userId,headerUrl);
+    }
+
+    /**
+     * 重新设置密码
+     * @param userId id
+     * @param oldPassword 原密码
+     * @param newPassword 新密码
+     */
+    public Map<String,Object> updatePassword(int userId,String oldPassword,String newPassword){
+        Map<String,Object> map = new HashMap<>();
+        User user = userMapper.selectById(userId);
+        oldPassword = CommunityUtils.md5(oldPassword + user.getSalt());
+        if(oldPassword == null || newPassword == null){
+            map.put("passwordMsg","密码输入不能为空!");
+            return map;
+        }
+        if(!oldPassword.equals(user.getPassword())){
+            map.put("passwordMsg","输入密码与原密码不符,请您重新输入!");
+            return map;
+        }
+        newPassword = CommunityUtils.md5(newPassword + user.getSalt());
+        userMapper.updatePassword(userId,newPassword);
+        return map;
+    }
 }
