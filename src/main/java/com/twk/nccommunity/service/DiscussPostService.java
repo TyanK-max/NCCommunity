@@ -17,9 +17,16 @@ public class DiscussPostService {
     @Autowired
     SensitiveFilter sensitiveFilter;
 
+    /**
+     * 查找帖子
+     * @param userId 当前用户id
+     * @param offset 当前行
+     * @param limit 分页
+     */
     public List<DiscussPost> findDiscussPosts(int userId, int offset, int limit){
         return discussPostMapper.selectDiscussPosts(userId,offset,limit);
     }
+
     public int findDiscussPostRows(int userId){
         return discussPostMapper.selectDiscussPostRows(userId);
     }
@@ -38,6 +45,10 @@ public class DiscussPostService {
 
     public DiscussPost findDiscussPostById(int id){
         return discussPostMapper.selectDiscussPostById(id);
+    }
+
+    public int updateCommentCount(int id,int commentCount){
+        return discussPostMapper.updateCommentCount(id,commentCount);
     }
 
 }

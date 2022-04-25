@@ -15,7 +15,7 @@ public class Comment {
     private int entityType;
     private int entityId;
     private int targetId;
-    private String comment;
+    private String content;
     private int status;
-    private Date date;
+    private Date createTime;
 }

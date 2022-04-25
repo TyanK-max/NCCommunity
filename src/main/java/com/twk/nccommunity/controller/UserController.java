@@ -2,6 +2,7 @@ package com.twk.nccommunity.controller;
 
 import com.twk.nccommunity.annotation.LoginRequired;
 import com.twk.nccommunity.entity.User;
+import com.twk.nccommunity.service.LikeService;
 import com.twk.nccommunity.service.UserService;
 import com.twk.nccommunity.util.CommunityUtils;
 import com.twk.nccommunity.util.HostHolder;
@@ -42,6 +43,9 @@ public class UserController {
 
     @Autowired
     private HostHolder holder;
+
+    @Autowired
+    private LikeService likeService;
 
     @LoginRequired
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
@@ -121,5 +125,21 @@ public class UserController {
             model.addAttribute("oldPass",oldPassword);
             return "site/setting";
         }
+    }
+
+    /**
+     * 获取用户个人页面数据
+     * @param userId 用户id
+     */
+    @RequestMapping(path = "/profile/{userId}",method = RequestMethod.GET)
+    public String getProfilePage(@PathVariable("userId") int userId,Model model){
+        User user = userService.findUserById(userId);
+        if(user == null){
+            throw new RuntimeException("该用户不存在!");
+        }
+        model.addAttribute("user",user);
+        int likeCount = likeService.findUserLikeCount(userId);
+        model.addAttribute("likeCount",likeCount);
+        return "site/profile";
     }
 }
