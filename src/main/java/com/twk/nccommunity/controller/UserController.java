@@ -2,8 +2,10 @@ package com.twk.nccommunity.controller;
 
 import com.twk.nccommunity.annotation.LoginRequired;
 import com.twk.nccommunity.entity.User;
+import com.twk.nccommunity.service.FollowService;
 import com.twk.nccommunity.service.LikeService;
 import com.twk.nccommunity.service.UserService;
+import com.twk.nccommunity.util.CommunityConstant;
 import com.twk.nccommunity.util.CommunityUtils;
 import com.twk.nccommunity.util.HostHolder;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +29,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController implements CommunityConstant {
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
@@ -46,6 +48,10 @@ public class UserController {
 
     @Autowired
     private LikeService likeService;
+
+    @Autowired
+    private FollowService followService;
+
 
     @LoginRequired
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
@@ -140,6 +146,19 @@ public class UserController {
         model.addAttribute("user",user);
         int likeCount = likeService.findUserLikeCount(userId);
         model.addAttribute("likeCount",likeCount);
+        //关注数量
+        long followee = followService.findFolloweeCount(userId, ENTITY_TYPE_USER);
+        model.addAttribute("followeeCount",followee);
+        //粉丝数量
+        long follower = followService.findFollowerCount(ENTITY_TYPE_USER, userId);
+        model.addAttribute("followerCount",follower);
+        //是否关注
+        boolean hasFollowed = false;
+        if(holder.getUsers() != null){
+            hasFollowed = followService.hasFollowed(holder.getUsers().getId(),ENTITY_TYPE_USER,userId);
+        }
+        model.addAttribute("hasFollowed",hasFollowed);
         return "site/profile";
     }
+
 }
