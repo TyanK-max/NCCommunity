@@ -1,7 +1,12 @@
 package com.twk.nccommunity.controller;
 
 import com.twk.nccommunity.entity.Comment;
+import com.twk.nccommunity.entity.DiscussPost;
+import com.twk.nccommunity.entity.Event;
+import com.twk.nccommunity.event.EventProducer;
 import com.twk.nccommunity.service.CommentService;
+import com.twk.nccommunity.service.DiscussPostService;
+import com.twk.nccommunity.util.CommunityConstant;
 import com.twk.nccommunity.util.HostHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,10 +18,13 @@ import java.util.Date;
 
 @Controller
 @RequestMapping("/comment")
-public class CommentController {
+public class CommentController implements CommunityConstant {
     @Autowired
     CommentService commentService;
-
+    @Autowired
+    DiscussPostService discussPostService;
+    @Autowired
+    EventProducer eventProducer;
     @Autowired
     HostHolder holder;
 
@@ -26,6 +34,22 @@ public class CommentController {
         comment.setStatus(0);
         comment.setCreateTime(new Date());
         commentService.addComment(comment);
+        //触发评论事件
+        Event event = new Event()
+                        .setTopic(TOPIC_COMMENT)
+                        .setUserId(holder.getUsers().getId())
+                        .setEntityType(comment.getEntityType())
+                        .setEntityId(comment.getEntityId())
+                        .setData("postId",id);
+        //判断实体类型，从而取得目标用户ID，获得其发布的实体，实现链接
+        if(comment.getEntityType() == ENTITY_TYPE_POST){
+            DiscussPost target = discussPostService.findDiscussPostById(comment.getEntityId());
+            event.setEntityUserId(target.getUserId());
+        }else if(comment.getEntityType() == ENTITY_TYPE_COMMENT){
+            Comment target = commentService.findCommentById(comment.getEntityId());
+            event.setEntityUserId(target.getUserId());
+        }
+        eventProducer.fireEvent(event);
         return "redirect:/discuss/detail/" + id;
     }
 }
