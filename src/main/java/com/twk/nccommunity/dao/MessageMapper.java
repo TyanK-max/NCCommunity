@@ -22,4 +22,12 @@ public interface MessageMapper {
     int insertMessage(Message message);
     //消息已读或删除
     int updateStatus(@Param("ids") List<Integer> ids,@Param("status") int status);
+    //查询某个主题下最新的系统通知
+    Message selectLatestNotice(@Param("userId") int userId,@Param("topic") String topic);
+    //查询某个主题包含的通知数量
+    int selectNoticeCount(@Param("userId")int userId,@Param("topic") String topic);
+    //查询某个主题未读通知数量
+    int selectNoticeUnreadCount(@Param("userId")int userId,@Param("topic") String topic);
+    //查询某个主题的通知列表
+    List<Message> findNotice(@Param("userId")int userId,@Param("topic") String topic,@Param("offset") int offset,@Param("limit") int limit);
 }

@@ -1,9 +1,7 @@
 package com.twk.nccommunity.controller;
 
-import com.twk.nccommunity.entity.Comment;
-import com.twk.nccommunity.entity.DiscussPost;
-import com.twk.nccommunity.entity.Page;
-import com.twk.nccommunity.entity.User;
+import com.twk.nccommunity.entity.*;
+import com.twk.nccommunity.event.EventProducer;
 import com.twk.nccommunity.service.CommentService;
 import com.twk.nccommunity.service.DiscussPostService;
 import com.twk.nccommunity.service.LikeService;
@@ -38,6 +36,8 @@ public class DiscussPostController implements CommunityConstant {
     LikeService likeService;
 
     @Autowired
+    EventProducer eventProducer;
+    @Autowired
     HostHolder holder;
     @RequestMapping(path = "/add",method = RequestMethod.POST)
     @ResponseBody
@@ -52,6 +52,13 @@ public class DiscussPostController implements CommunityConstant {
         post.setContent(content);
         post.setCreateTime(new Date());
         discussPostService.addDiscussPost(post);
+        //触发发帖事件
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(user.getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(post.getId());
+        eventProducer.fireEvent(event);
         return CommunityUtils.getJSONString(0,"发布成功!");
     }
 
