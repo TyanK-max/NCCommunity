@@ -1,5 +1,6 @@
 package com.twk.nccommunity.config;
 
+import com.twk.nccommunity.controller.Interceptor.DataInterceptor;
 import com.twk.nccommunity.controller.Interceptor.LoginRequiredInterceptor;
 import com.twk.nccommunity.controller.Interceptor.LoginTicketInterceptor;
 import com.twk.nccommunity.controller.Interceptor.MessageInterceptor;
@@ -15,8 +16,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private LoginTicketInterceptor loginTicketInterceptor;
 
+//    @Autowired
+//    private LoginRequiredInterceptor loginRequiredInterceptor;
+
     @Autowired
-    private LoginRequiredInterceptor loginRequiredInterceptor;
+    private DataInterceptor dataInterceptor;
 
     @Autowired
     private MessageInterceptor messageInterceptor;
@@ -24,9 +28,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginTicketInterceptor)
                 .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg");
-        registry.addInterceptor(loginRequiredInterceptor)
-                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg");
+//        registry.addInterceptor(loginRequiredInterceptor)
+//                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg");
         registry.addInterceptor(messageInterceptor)
+                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg");
+        registry.addInterceptor(dataInterceptor)
                 .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg");
     }
 }

@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: com.twk.nccommunity.ElasticsearchTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.714 sec <<< FAILURE!
+com.twk.nccommunity.ElasticsearchTest.testSearchByRepository()  Time elapsed: 0.714 sec  <<< FAILURE!
+java.lang.NullPointerException
+	at com.twk.nccommunity.ElasticsearchTest.testSearchByRepository(ElasticsearchTest.java:89)
+

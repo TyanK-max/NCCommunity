@@ -8,7 +8,9 @@ import com.twk.nccommunity.service.CommentService;
 import com.twk.nccommunity.service.DiscussPostService;
 import com.twk.nccommunity.util.CommunityConstant;
 import com.twk.nccommunity.util.HostHolder;
+import com.twk.nccommunity.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,8 @@ public class CommentController implements CommunityConstant {
     EventProducer eventProducer;
     @Autowired
     HostHolder holder;
+    @Autowired
+    RedisTemplate redisTemplate;
 
     @RequestMapping(path = "/add/{discussPostId}",method = RequestMethod.POST)
     public String addComment(@PathVariable("discussPostId") int id, Comment comment){
@@ -41,6 +45,9 @@ public class CommentController implements CommunityConstant {
                         .setEntityType(comment.getEntityType())
                         .setEntityId(comment.getEntityId())
                         .setData("postId",id);
+        //计算帖子分数
+        String postScoreKey = RedisKeyUtil.getPostScoreKey();
+        redisTemplate.opsForSet().add(postScoreKey,id);
         //判断实体类型，从而取得目标用户ID，获得其发布的实体，实现链接
         if(comment.getEntityType() == ENTITY_TYPE_POST){
             DiscussPost target = discussPostService.findDiscussPostById(comment.getEntityId());

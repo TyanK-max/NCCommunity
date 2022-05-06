@@ -22,7 +22,7 @@ public class MapperTest {
     MessageMapper messageMapper;
     @Test
     public void test(){
-        List<DiscussPost> list = discussPostMapper.selectDiscussPosts(149, 0, 10);
+        List<DiscussPost> list = discussPostMapper.selectDiscussPosts(149, 0, 10,0);
         for(DiscussPost d:list){
             System.out.println(d);
         }

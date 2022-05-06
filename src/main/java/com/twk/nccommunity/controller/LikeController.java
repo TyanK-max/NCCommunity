@@ -7,8 +7,10 @@ import com.twk.nccommunity.service.LikeService;
 import com.twk.nccommunity.util.CommunityConstant;
 import com.twk.nccommunity.util.CommunityUtils;
 import com.twk.nccommunity.util.HostHolder;
+import com.twk.nccommunity.util.RedisKeyUtil;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +26,8 @@ public class LikeController implements CommunityConstant {
     HostHolder holder;
     @Autowired
     EventProducer eventProducer;
+    @Autowired
+    RedisTemplate redisTemplate;
 
     @RequestMapping(path = "/like",method = RequestMethod.POST)
     @ResponseBody
@@ -46,7 +50,11 @@ public class LikeController implements CommunityConstant {
                     .setData("postId",postId);
             eventProducer.fireEvent(event);
         }
-
+        //计算帖子分数
+        if(entityType == ENTITY_TYPE_POST){
+            String postScoreKey = RedisKeyUtil.getPostScoreKey();
+            redisTemplate.opsForSet().add(postScoreKey,postId);
+        }
         return CommunityUtils.getJSONString(0,null,map);
     }
 }
