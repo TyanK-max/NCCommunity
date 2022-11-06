@@ -62,4 +62,11 @@
         set score = #{score}
         where id = #{id};
     </update>
+
+    <select id="selectDiscussPostByUserId" resultType="DiscussPost">
+        select *
+        from discuss_post
+        where status != 2 and user_id = #{userId}
+        limit #{offset},#{limit};
+    </select>
 </mapper>

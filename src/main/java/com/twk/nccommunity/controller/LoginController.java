@@ -112,7 +112,7 @@ public class LoginController implements CommunityConstant {
                         @CookieValue("kaptchaOwner") String kaptchaOwner){
 //        String kaptcha = (String) session.getAttribute("kaptcha");
         String kaptcha = null;
-        if(StringUtils.isNoneBlank(kaptchaOwner)) {
+        if(StringUtils.isNotBlank(kaptchaOwner)) {
             String kaptchaKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
             kaptcha = (String) redisTemplate.opsForValue().get(kaptchaKey);
         }

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface MessageMapper {
-    //查询当前用户的所有会话,每个会话返回最新的消息
+    //
     List<Message> selectConversations(@Param("userId") int userId,@Param("offset") int offset,@Param("limit") int limit);
     //查询当前用户会话数量
     int selectConversationCount(@Param("userId") int userId);

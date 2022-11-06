@@ -31,4 +31,17 @@
         from comment
         where id = #{id};
     </select>
+
+    <select id="selectCommentByUser" resultType="Comment">
+        select id, entity_type, entity_id, target_id, content, status, create_time
+        from comment
+        where user_id = #{userId}
+        limit #{offset},#{limit};
+    </select>
+
+    <select id="selectCommentRowsByUser" resultType="int">
+        select count(*)
+        from comment
+        where user_id = #{userId};
+    </select>
 </mapper>

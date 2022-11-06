@@ -40,7 +40,7 @@ public interface CommunityConstant {
     /**
      * 系统用户id = 1
      */
-    int SYSTEM_USER_ID = 1;
+        int SYSTEM_USER_ID = 1;
 
     /**
      * 权限：用户，管理员，版主

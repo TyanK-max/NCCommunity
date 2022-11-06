@@ -33,6 +33,7 @@ public class HomeController implements CommunityConstant {
     @RequestMapping(path = "/index",method = RequestMethod.GET)
     public String getIndexPage(Model model, Page page,
                                @RequestParam(name = "orderMode",defaultValue = "0") int orderMode){
+        //orderMode: 0：最新版块，1：最热版块 caffeine 默认只存储最新的
         page.setRows(discussPostService.findDiscussPostRows(0));
         page.setPath("/index?orderMode=" + orderMode);
         List<DiscussPost> posts = discussPostService.findDiscussPosts(0, page.getOffset(), page.getLimit(),orderMode);

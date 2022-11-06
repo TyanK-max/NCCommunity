@@ -52,17 +52,12 @@ public class UserService implements CommunityConstant {
         return cache;
     }
 
-    public User findPostByEmail(String email) {
+    public User findUserByEmail(String email) {
         return userMapper.selectByEmail(email);
-    }
-
-    public User findPostByName(String username) {
-        return userMapper.selectByName(username);
     }
 
     /**
      * 注册用户功能
-     *
      * @param user 一个用户对象
      */
     public Map<String, Object> register(User user) {

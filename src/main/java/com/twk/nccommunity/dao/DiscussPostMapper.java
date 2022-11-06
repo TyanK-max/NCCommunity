@@ -25,4 +25,6 @@ public interface DiscussPostMapper {
     int updatePostStatus(@Param("id") int id,@Param("status") int status);
     //更新帖子分数
     int updatePostScore(@Param("id") int id,@Param("score") double score);
+    // 根据用户ID查找其发布的帖子
+    List<DiscussPost> selectDiscussPostByUserId(@Param("userId") int userId,@Param("offset") int offset,@Param("limit") int limit);
 }
