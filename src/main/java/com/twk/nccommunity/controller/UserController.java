@@ -177,7 +177,7 @@ public class UserController implements CommunityConstant {
     public String getOwnerPost(@PathVariable("userId") int userId, Model model, Page page){
         int size = discussPostService.findDiscussPostRows(userId);
         page.setRows(size);
-        page.setPath("/profile/postList");
+        page.setPath("/profile/postList/" + userId);
         User user = userService.findUserById(userId);
         List<DiscussPost> postList = discussPostService.findDiscussPostByUserId(userId,page.getOffset(),page.getLimit());
         List<Map<String,Object>> postMap = new ArrayList<>();
@@ -200,7 +200,7 @@ public class UserController implements CommunityConstant {
     public String getOwnerComment(@PathVariable("userId") int userId,Model model,Page page){
         int size = commentService.findOwnerCommentCount(userId);
         page.setRows(size);
-        page.setPath("/user/profile/repList");
+        page.setPath("/user/profile/repList/" + userId);
         User user = userService.findUserById(userId);
         List<Comment> commentList = commentService.findCommentByUser(userId,page.getOffset(),page.getLimit());
         List<Map<String,Object>> commentMap = new ArrayList<>();

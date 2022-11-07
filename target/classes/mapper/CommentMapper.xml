@@ -35,13 +35,29 @@
     <select id="selectCommentByUser" resultType="Comment">
         select id, entity_type, entity_id, target_id, content, status, create_time
         from comment
-        where user_id = #{userId}
+        where status != 1 and user_id = #{userId}
         limit #{offset},#{limit};
     </select>
 
     <select id="selectCommentRowsByUser" resultType="int">
         select count(*)
         from comment
-        where user_id = #{userId};
+        where status != 1 and user_id = #{userId};
     </select>
+    
+
+    <update id="deleteCommentByPostId">
+        update comment
+        set status = 1
+        <where>
+            <if test="entityType==1">
+                entity_id = #{entityId}
+            </if>
+            <if test="entityType==2">
+                <!--    嵌套子查询 多加一层select 防止报错-->
+                entity_id = (select id from (select id from comment where entity_id = #{entityId}) as a)
+            </if>
+        </where>
+    </update>
+    
 </mapper>

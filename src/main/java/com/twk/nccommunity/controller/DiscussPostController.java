@@ -174,6 +174,9 @@ public class DiscussPostController implements CommunityConstant {
     @ResponseBody
     public String setDelete(int id){
         discussPostService.updatePostStatus(id,2);
+        // 删帖同时删除其下的评论及回复
+        commentService.deleteCommentWhenDelPost(id,ENTITY_TYPE_POST);
+        commentService.deleteCommentWhenDelPost(id,ENTITY_TYPE_COMMENT);
         //删帖同步到ElasticSearch
         Event event = new Event()
                 .setTopic(TOPIC_DELETE)

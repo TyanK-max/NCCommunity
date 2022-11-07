@@ -56,6 +56,10 @@ public class CommentService implements CommunityConstant {
     }
     
     public List<Comment> findCommentByUser(int userId,int offset,int limit){
-        return commentMapper.selectCommentByUser(userId,offset,limit);
+        return commentMapper.selectCommentByUser(userId, offset, limit);
+    }
+    
+    public int deleteCommentWhenDelPost(int entityId,int entityType){
+        return commentMapper.deleteCommentByPostId(entityId,entityType);
     }
 }

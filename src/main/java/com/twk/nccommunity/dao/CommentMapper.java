@@ -19,7 +19,13 @@ public interface CommentMapper {
 
     Comment selectCommentById(@Param("id") int id);
     
+    // 查找用户的评论及回复
     List<Comment> selectCommentByUser(@Param("userId") int userId,@Param("offset") int offset, @Param("limit") int limit);
     
+    // 计算用户评论回复个数
     int selectCommentRowsByUser(@Param("userId") int userId);
+    
+    // 删贴后需要删除评论及回复
+    int deleteCommentByPostId(@Param("entityId") int entityId,@Param("entityType") int entityType);
+
 }
