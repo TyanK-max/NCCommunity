@@ -65,16 +65,16 @@ public class HomeController implements CommunityConstant {
             }
         }
         // 生成文件别名
-        String fileName = CommunityUtils.generateUUID();
+        String fileUUID = CommunityUtils.generateUUID();
         // 设置callback
         StringMap putPolicy = new StringMap();
         putPolicy.put("returnBody",CommunityUtils.getJSONString(0));
         // 生成上传凭证
         Auth auth = Auth.create(accessKey, secretKey);
         long expiresSeconds = 3600;
-        String token = auth.uploadToken(fileBucketName, fileName, expiresSeconds, putPolicy);
+        String token = auth.uploadToken(fileBucketName, fileUUID, expiresSeconds, putPolicy);
         model.addAttribute("uploadToken",token);
-        model.addAttribute("fileName",fileName);
+        model.addAttribute("fileName",fileUUID);
         
         model.addAttribute("discussPosts",discussPosts);
         model.addAttribute("orderMode",orderMode);

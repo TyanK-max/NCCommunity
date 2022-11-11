@@ -1,5 +1,6 @@
 package com.twk.nccommunity.controller;
 
+import cn.hutool.core.date.DateUtil;
 import com.twk.nccommunity.entity.Comment;
 import com.twk.nccommunity.entity.DiscussPost;
 import com.twk.nccommunity.entity.Event;
@@ -36,7 +37,7 @@ public class CommentController implements CommunityConstant {
     public String addComment(@PathVariable("discussPostId") int id, Comment comment){
         comment.setUserId(holder.getUsers().getId());
         comment.setStatus(0);
-        comment.setCreateTime(new Date());
+        comment.setCreateTime(DateUtil.offsetHour(new Date(),+8));
         commentService.addComment(comment);
         //触发评论事件
         Event event = new Event()

@@ -26,11 +26,11 @@ function like(btn, entityType, entityId,entityUserId,postId) {
 }
 
 function setTop() {
-    var token = $("meta[name='_csrf']").attr("content");
-    var header = $("meta[name='_csrf_header']").attr("content");
-    $(document).ajaxSend(function (e,xhr,options) {
-        xhr.setRequestHeader(header,token);
-    })
+    // var token = $("meta[name='_csrf']").attr("content");
+    // var header = $("meta[name='_csrf_header']").attr("content");
+    // $(document).ajaxSend(function (e,xhr,options) {
+    //     xhr.setRequestHeader(header,token);
+    // })
     $.post(
         CONTEXT_PATH + "/discuss/top",
         {"id":$("#postId").val()},
@@ -45,11 +45,11 @@ function setTop() {
     )
 }
 function setWonderFul() {
-    var token = $("meta[name='_csrf']").attr("content");
-    var header = $("meta[name='_csrf_header']").attr("content");
-    $(document).ajaxSend(function (e,xhr,options) {
-        xhr.setRequestHeader(header,token);
-    })
+    // var token = $("meta[name='_csrf']").attr("content");
+    // var header = $("meta[name='_csrf_header']").attr("content");
+    // $(document).ajaxSend(function (e,xhr,options) {
+    //     xhr.setRequestHeader(header,token);
+    // })
     $.post(
         CONTEXT_PATH + "/discuss/wonderful",
         {"id":$("#postId").val()},
@@ -64,11 +64,11 @@ function setWonderFul() {
     )
 }
 function setDelete() {
-    var token = $("meta[name='_csrf']").attr("content");
-    var header = $("meta[name='_csrf_header']").attr("content");
-    $(document).ajaxSend(function (e,xhr,options) {
-        xhr.setRequestHeader(header,token);
-    })
+    // var token = $("meta[name='_csrf']").attr("content");
+    // var header = $("meta[name='_csrf_header']").attr("content");
+    // $(document).ajaxSend(function (e,xhr,options) {
+    //     xhr.setRequestHeader(header,token);
+    // })
     $.post(
         CONTEXT_PATH + "/discuss/delete",
         {"id":$("#postId").val()},

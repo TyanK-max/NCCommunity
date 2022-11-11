@@ -1,5 +1,6 @@
 package com.twk.nccommunity.controller;
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.twk.nccommunity.dao.MessageMapper;
 import com.twk.nccommunity.entity.Message;
@@ -116,7 +117,7 @@ public class MessageController implements CommunityConstant {
             message.setConversationId(message.getToId() + "_" +message.getFromId());
         }
         message.setContent(content);
-        message.setCreateTime(new Date());
+        message.setCreateTime(DateUtil.offsetHour(new Date(),+8));
         messageService.addMessage(message);
         return CommunityUtils.getJSONString(0);
     }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.twk.nccommunity.dao.UploadFileMapper">
+    
+    <select id="selectUploadedFiles" resultType="UploadFile">
+        select id, file_name, file_size, file_url, file_type, owner_id, upload_time, download_cnt
+        from upload_file
+        order by upload_time
+        limit #{offset},#{limit};
+    </select>
+    
+    <select id="selectUploadedFileRows" resultType="int">
+        select count(*)
+        from upload_file;
+    </select>
+    
+    <insert id="insertUploadFile">
+        insert into upload_file (file_name, file_size, file_url, file_type, owner_id, upload_time, download_cnt)
+        values (#{fileName},#{fileSize},#{fileUrl},#{fileType},#{ownerId},#{uploadTime},#{downloadCnt});
+    </insert>
+</mapper>
