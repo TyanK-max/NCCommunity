@@ -1,14 +1,21 @@
 package com.twk.nccommunity.config;
 
 import com.twk.nccommunity.controller.Interceptor.DataInterceptor;
-import com.twk.nccommunity.controller.Interceptor.LoginRequiredInterceptor;
 import com.twk.nccommunity.controller.Interceptor.LoginTicketInterceptor;
 import com.twk.nccommunity.controller.Interceptor.MessageInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -35,4 +42,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(dataInterceptor)
                 .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg");
     }
+    
 }

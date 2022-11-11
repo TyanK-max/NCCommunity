@@ -55,7 +55,7 @@
             </if>
             <if test="entityType==2">
                 <!--    嵌套子查询 多加一层select 防止报错-->
-                entity_id = (select id from (select id from comment where entity_id = #{entityId}) as a)
+                entity_id in (select id from (select id from comment where entity_id = #{entityId}) as a where entity_type = #{entityType})
             </if>
         </where>
     </update>

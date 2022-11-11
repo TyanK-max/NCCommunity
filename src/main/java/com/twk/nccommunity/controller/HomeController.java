@@ -1,5 +1,7 @@
 package com.twk.nccommunity.controller;
 
+import com.qiniu.util.Auth;
+import com.qiniu.util.StringMap;
 import com.twk.nccommunity.dao.DiscussPostMapper;
 import com.twk.nccommunity.entity.DiscussPost;
 import com.twk.nccommunity.entity.Page;
@@ -8,7 +10,9 @@ import com.twk.nccommunity.service.DiscussPostService;
 import com.twk.nccommunity.service.LikeService;
 import com.twk.nccommunity.service.UserService;
 import com.twk.nccommunity.util.CommunityConstant;
+import com.twk.nccommunity.util.CommunityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +33,18 @@ public class HomeController implements CommunityConstant {
     @Autowired
     private LikeService likeService;
 
+    @Value("${qiniu.key.acess}")
+    private String accessKey;
 
+    @Value("${qiniu.key.secret}")
+    private String secretKey;
+    
+    @Value("${qiniu.bucket.file.name}")
+    private String fileBucketName;
+
+    @Value(("${qiniu.bucket.file.url}"))
+    private String fileBucketUrl;
+    
     @RequestMapping(path = "/index",method = RequestMethod.GET)
     public String getIndexPage(Model model, Page page,
                                @RequestParam(name = "orderMode",defaultValue = "0") int orderMode){
@@ -49,6 +64,18 @@ public class HomeController implements CommunityConstant {
                 discussPosts.add(map);
             }
         }
+        // 生成文件别名
+        String fileName = CommunityUtils.generateUUID();
+        // 设置callback
+        StringMap putPolicy = new StringMap();
+        putPolicy.put("returnBody",CommunityUtils.getJSONString(0));
+        // 生成上传凭证
+        Auth auth = Auth.create(accessKey, secretKey);
+        long expiresSeconds = 3600;
+        String token = auth.uploadToken(fileBucketName, fileName, expiresSeconds, putPolicy);
+        model.addAttribute("uploadToken",token);
+        model.addAttribute("fileName",fileName);
+        
         model.addAttribute("discussPosts",discussPosts);
         model.addAttribute("orderMode",orderMode);
         return "index";

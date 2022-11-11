@@ -3,12 +3,13 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="_csrf" th:content="${_csrf.token}">
-	<meta name="_csrf_header" th:content="${_csrf.headerName}">
-	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
+<!--	<meta name="_csrf" th:content="${_csrf.token}">-->
+<!--	<meta name="_csrf_header" th:content="${_csrf.headerName}">-->
+	<link rel="icon" href="http://rkemlk0l5.hn-bkt.clouddn.com/b85ea5b3a27a34d6b5f14a5d836deb34.png"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" />
-	<title>个人主页</title>
+	<link rel="stylesheet" th:href="@{css/letter.css}" />
+	<title>Pantheon-个人主页</title>
 </head>
 <body>
 	<div class="nk-container">
@@ -28,7 +29,7 @@
 							<a class="nav-link" th:href="@{|/user/profile/postList/${user.id}|}">帖子</a>
 						</li>
 						<li class="nav-item" th:if="${user.id==loginUser.id}">
-							<a class="nav-link" th:href="@{|/user/profile/repList/${user.id}|}">我的回复</a>
+							<a class="nav-link" th:href="@{|/user/profile/repList/${user.id}|}">评论&回复</a>
 						</li>
 					</ul>
 				</div>
@@ -40,8 +41,52 @@
 							<span th:utext="${user.username}">nowcoder</span>
 							<input type="hidden" th:value="${user.id}">
 							<button type="button" th:class="|btn ${hasFollowed?'btn-secondary':'btn-info'} btn-sm float-right mr-5 follow-btn|"
-									th:text="${hasFollowed?'已关注':'关注TA'}" th:if="${loginUser!=null&&loginUser.id!=user.id}">关注TA</button>
+									th:text="${hasFollowed?'取消关注':'关注TA'}" th:if="${loginUser!=null&&loginUser.id!=user.id}">关注TA</button>
+							<button type="button" class="btn btn-outline-primary btn-sm float-right mr-5" data-toggle="modal" data-target="#sendModal" 
+									th:if="${loginUser!=null&&loginUser.id!=user.id}">私信 TA</button>
 						</h5>
+						<!-- 弹出框 -->
+						<div class="modal fade" id="sendModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-lg" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel">发私信</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body">
+										<form>
+											<div class="form-group">
+												<label for="recipient-name" class="col-form-label">发给：</label>
+												<input type="text" class="form-control" id="recipient-name" th:value="${user.username}">
+											</div>
+											<div class="form-group">
+												<label for="message-text" class="col-form-label">内容：</label>
+												<textarea class="form-control" id="message-text" rows="10"></textarea>
+											</div>
+										</form>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+										<button type="button" class="btn btn-primary" id="sendBtn">发送</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- 提示框 -->
+						<div class="modal fade" id="hintModal" tabindex="-1" role="dialog" aria-labelledby="hintModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-lg" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="hintModalLabel">提示</h5>
+									</div>
+									<div class="modal-body" id="hintBody">
+										发送完毕!
+									</div>
+								</div>
+							</div>
+						</div>
 						<div class="text-muted mt-3">
 							<span>注册于 <i class="text-muted" th:text="${#dates.format(user.createTime,'yyyy-MM-dd HH:mm:ss')}">2015-06-12 15:20:12</i></span>
 						</div>
@@ -66,5 +111,6 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
 	<script th:src="@{/js/global.js}"></script>
 	<script th:src="@{/js/profile.js}"></script>
+	<script th:src="@{/js/letter.js}"></script>
 </body>
 </html>

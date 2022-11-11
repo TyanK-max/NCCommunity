@@ -3,15 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="_csrf" th:content="${_csrf.token}">
-    <meta name="_csrf_header" th:content="${_csrf.headerName}">
-
-
-    <link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
+<!--    <meta name="_csrf" th:content="${_csrf.token}">-->
+<!--    <meta name="_csrf_header" th:content="${_csrf.headerName}">-->
+    <link rel="icon" href="http://rkemlk0l5.hn-bkt.clouddn.com/b85ea5b3a27a34d6b5f14a5d836deb34.png"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{css/global.css}"/>
-    <title>UnLimited Work</title>
+    <title>Pantheon</title>
 </head>
 <body>
 <div class="nk-container">
@@ -21,7 +20,7 @@
             <!-- 导航 -->
             <nav class="navbar navbar-expand-lg navbar-dark">
                 <!-- logo -->
-                <a class="navbar-brand" th:href="@{/index}"></a>
+                 <img class="navbar-brand" th:src="@{/img/pan.png}" width="42px" height="42px">
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -106,7 +105,16 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="message-text" class="col-form-label">正文：</label>
-                                    <textarea class="form-control" id="message-text" rows="15"></textarea>
+                                    <textarea class="form-control" id="message-text" rows="10"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <input id="location" class="form-control" onclick="$('#i-file').click();">
+                                    <input type="hidden" name="token" th:value="${uploadToken}">
+                                    <input type="hidden" name="key" th:value="${fileName}">
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="bi bi-cloud-upload-fill btn btn-outline-primary btn-sm" onclick="$('#i-file').click();">上传文件</button>
+                                    <input type="file" id="i-file" name="file" style="display: none" accept=".pdf,.xlsx,.docx" onchange="$('#location').val($('#i-file').val())">
                                 </div>
                             </form>
                         </div>

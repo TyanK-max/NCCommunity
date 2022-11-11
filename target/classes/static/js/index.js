@@ -7,11 +7,11 @@ function publish() {
 	var title = $("#recipient-name").val();
 	var content = $("#message-text").val();
 
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
-	$(document).ajaxSend(function (e,xhr,options) {
-		xhr.setRequestHeader(header,token);
-	})
+	// var token = $("meta[name='_csrf']").attr("content");
+	// var header = $("meta[name='_csrf_header']").attr("content");
+	// $(document).ajaxSend(function (e,xhr,options) {
+	// 	xhr.setRequestHeader(header,token);
+	// })
 	$.post(
 		CONTEXT_PATH + "/discuss/add",
 		{"title":title,"content":content},
