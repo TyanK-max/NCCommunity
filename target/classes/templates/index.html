@@ -68,150 +68,201 @@
         </div>
     </header>
 
-    <!-- 内容 -->
-    <div class="main">
-        <div class="container">
-            <div class="position-relative">
-                <!-- 筛选条件 -->
-                <ul class="nav nav-tabs mb-3">
-                    <li class="nav-item">
-                        <a th:class="|nav-link ${orderMode==0?'active':''}|" th:href="@{/index(orderMode=0)}">最新</a>
-                    </li>
-                    <li class="nav-item">
-                        <a th:class="|nav-link ${orderMode==1?'active':''}|" th:href="@{/index(orderMode=1)}">最热</a>
+    <div class="row container-fluid">
+        <!-- 内容 -->
+        <div class="main col-sm-9">
+            <div class="container"  id="indexContainer">
+                <div class="position-relative">
+                    <!-- 筛选条件 -->
+                    <ul class="nav nav-tabs mb-3">
+                        <li class="nav-item">
+                            <a th:class="|nav-link ${orderMode==0?'active':''}|" th:href="@{/index(orderMode=0)}">最新</a>
+                        </li>
+                        <li class="nav-item">
+                            <a th:class="|nav-link ${orderMode==1?'active':''}|" th:href="@{/index(orderMode=1)}">最热</a>
+                        </li>
+                    </ul>
+                    <button type="button" class="btn btn-primary btn-sm position-absolute rt-0" data-toggle="modal"
+                            th:if="${loginUser!=null}"
+                            data-target="#publishModal">我要发布
+                    </button>
+                </div>
+                <!-- 弹出框 -->
+                <div class="modal fade" id="publishModal" tabindex="-1" role="dialog" aria-labelledby="publishModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="publishModalLabel">新帖发布</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="needs-validation">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">标题：</label>
+                                        <input type="text" class="form-control" id="recipient-name" name="postTitle" aria-describedby="validTitle" required>
+                                        <div class="invalid-feedback" id="title-feedback">
+                                            请输入标题.
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="message-text" class="col-form-label">正文：</label>
+                                        <textarea class="form-control" id="message-text" name="postContent" rows="10"></textarea>
+                                    </div>
+                                </form>
+                                <!--上传文件表单-->
+                                <form id="uploadForm" class="form-inline">
+                                    <div class="form-group">
+                                        <input type="hidden" name="token" th:value="${uploadToken}">
+                                        <input type="hidden" name="key" th:value="${fileName}">
+                                        <label for="location">文件预览：</label>
+                                        <div class="col-xl-4">
+                                            <input id="location" class="form-control" onclick="$('#i-file').click();">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="button" class="bi bi-cloud-upload-fill btn btn-outline-primary btn-sm"
+                                                onclick="$('#i-file').click();">上传文件
+                                        </button>
+                                        <input type="file" id="i-file" name="file" style="display: none"
+                                               accept=".pdf,.xlsx,.docx,.zip,.txt"
+                                               onchange="$('#location').val($('#i-file').val())">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                <button type="button" class="btn btn-primary" id="publishBtn">发布</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 提示框 -->
+                <div class="modal fade" id="hintModal" tabindex="-1" role="dialog" aria-labelledby="hintModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="hintModalLabel">提示</h5>
+                            </div>
+                            <div class="modal-body" id="hintBody">
+                                发布完毕!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 帖子列表 -->
+                <ul class="list-unstyled">
+                    <li class="media pb-3 pt-3 mb-3 border-bottom" th:each="map : ${discussPosts}">
+                        <a th:href="@{|/user/profile/${map.user.id}|}">
+                            <img th:src="${map.user.headerUrl}" class="mr-4 rounded-circle" alt="用户头像"
+                                 style="width:50px;height:50px;">
+                        </a>
+                        <div class="media-body">
+                            <h6 class="mt-0 mb-3">
+                                <a th:href="@{|/discuss/detail/${map.posts.id}|}" th:utext="${map.posts.title}">备战春招，面试刷题跟他复习，一个月全搞定！</a>
+                                <span class="badge badge-secondary bg-primary" th:if="${map.posts.type==1}">置顶</span>
+                                <span class="badge badge-secondary bg-danger" th:if="${map.posts.status==1}">精华</span>
+                            </h6>
+                            <div class="text-muted font-size-12">
+                                <u class="mr-3" th:utext="${map.user.username}">寒江雪</u> 发布于 <b
+                                    th:text="${#dates.format(map.posts.createTime,'yyyy-MM-dd HH:mm:ss')}">2019-04-15
+                                15:32:18</b>
+                                <ul class="d-inline float-right">
+                                    <li class="d-inline ml-2">赞 <span th:text="${map.likeCount}">11</span></li>
+                                    <li class="d-inline ml-2">|</li>
+                                    <li class="d-inline ml-2">回帖 <span th:text="${map.posts.commentCount}">7</span></li>
+                                </ul>
+                            </div>
+                        </div>
                     </li>
                 </ul>
-                <button type="button" class="btn btn-primary btn-sm position-absolute rt-0" data-toggle="modal"
-                        th:if="${loginUser!=null}"
-                        data-target="#publishModal">我要发布
-                </button>
+                <!-- 分页 -->
+                <nav class="mt-5" th:if="${page.rows>0}" th:fragment="pagination">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item"><a class="page-link" th:href="@{${page.path}(current=1)}">首页</a></li>
+                        <li th:class="|page-item ${page.current==1?'disabled':''}|"><a class="page-link" th:href="@{${page.path}(current=${page.current-1})}">上一页</a></li>
+                        <li th:class="|page-item ${i==page.current?'active':''}|" th:each="i:${#numbers.sequence(page.from,page.to)}"><a class="page-link" th:href="@{${page.path}(current=${i})}" th:text="${i}">1</a></li>
+                        <li th:class="|page-item ${page.current==page.total?'disabled':''}|"><a class="page-link" th:href="@{${page.path}(current=${page.current+1})}">下一页</a></li>
+                        <li class="page-item"><a class="page-link" th:href="@{${page.path}(current=${page.total})}">末页</a></li>
+                    </ul>
+                </nav>
             </div>
-            <!-- 弹出框 -->
-            <div class="modal fade" id="publishModal" tabindex="-1" role="dialog" aria-labelledby="publishModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+        </div>
+        <!--文件侧边栏-->
+        <div class="aside-container col-sm-3">
+            <div class="card mb-3 col col-lg-3" style="max-width: 18rem;">
+                <div class="card-body p-3">
+                    <h6 class="row card-title">
+                        <div class="col text-muted"><i class="bi bi-file-earmark-arrow-down-fill text-muted"></i>&nbsp;文件</div>
+                        <a th:href="@{/files/list}" class="text-muted" id="gotoFiles" style="text-decoration: none" th:text="${fileRows}">100</a>
+                        &nbsp;<i class="bi bi-box-arrow-right"></i>
+                    </h6>
+                    <!--最新上传的5个文件-->
+                    <ul class="list-group list-group-flush" id="fileList">
+                        <li class="media border-bottom position-relative list-group-flush list-group-item-action" th:each="map : ${fileMap}"
+                            th:value="${map.file.id}" data-toggle="modal" data-target="#downLoadModal" >
+                            <div class="media-body">
+							<span>
+								<span style="font-size: 25px"><i th:class="${map.type=='zip'?'bi bi-file-earmark-zip':'bi bi-filetype-'+map.type}"></i>&nbsp;</span>
+								<input type="hidden" th:value="${map.file.id}" th:id="file+${map.file.id}">
+								<a th:text="${map.file.fileName}">文件名</a>
+							</span>
+                            </div>
+                        </li>
+                    </ul>
+            </div>
+        </div>
+            <!-- 侧边栏文件信息弹出框 -->
+            <div class="modal fade" id="downLoadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="publishModalLabel">新帖发布</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">文件详情</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form>
-                                <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">标题：</label>
-                                    <input type="text" class="form-control" id="recipient-name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="message-text" class="col-form-label">正文：</label>
-                                    <textarea class="form-control" id="message-text" rows="10"></textarea>
-                                </div>
-                            </form>
-                            <form id="uploadForm" class="form-inline">
-                                <div class="form-group">
-                                    <input type="hidden" name="token" th:value="${uploadToken}">
-                                    <input type="hidden" name="key" th:value="${fileName}">
-                                    <label for="location">文件预览：</label>
-                                    <div class="col-xl-4">
-                                        <input id="location" class="form-control" onclick="$('#i-file').click();">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <button type="button" class="bi bi-cloud-upload-fill btn btn-outline-primary btn-sm"
-                                            onclick="$('#i-file').click();">上传文件
-                                    </button>
-                                    <input type="file" id="i-file" name="file" style="display: none"
-                                           accept=".pdf,.xlsx,.docx"
-                                           onchange="$('#location').val($('#i-file').val())">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                            <button type="button" class="btn btn-primary" id="publishBtn">发布</button>
+                            <div style="text-align: center">
+									<span style="font-size: 100px">
+									<i id="fileIcon"></i>
+									</span>
+                            </div>
+                            <div id="fileName" style="text-align: center;font-size: large" class="text-info"></div>
+                            <br>
+                            <div style="text-align: center">
+                                <span class="text-secondary">上传：</span>
+                                <a class="text-primary text-decoration-none" id="ownerId"
+                                   style="text-align: center" href="">用户</a>&nbsp;
+                                <b class="text-secondary" id="fileSize">文件大小</b>&nbsp;
+                                <b id="uploadTime" class="text-secondary">2019-04-15 15:32:18</b>
+                            </div>
+                            <br>
+                            <div style="text-align: center">
+                                <input type="hidden" id="fileId" value="">
+                                <a type="button" class="btn btn-sm btn-outline-primary" id="downLoadBtn" href="" download="">下载</a>
+                            </div>
+                            <br>
+                            <div style="text-align: center">
+                                <span class="text-secondary">下载次数:</span>
+                                <b id="downloadCnt" class="text-danger"></b>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- 提示框 -->
-            <div class="modal fade" id="hintModal" tabindex="-1" role="dialog" aria-labelledby="hintModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="hintModalLabel">提示</h5>
-                        </div>
-                        <div class="modal-body" id="hintBody">
-                            发布完毕!
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 帖子列表 -->
-            <ul class="list-unstyled">
-                <li class="media pb-3 pt-3 mb-3 border-bottom" th:each="map : ${discussPosts}">
-                    <a th:href="@{|/user/profile/${map.user.id}|}">
-                        <img th:src="${map.user.headerUrl}" class="mr-4 rounded-circle" alt="用户头像"
-                             style="width:50px;height:50px;">
-                    </a>
-                    <div class="media-body">
-                        <h6 class="mt-0 mb-3">
-                            <a th:href="@{|/discuss/detail/${map.posts.id}|}" th:utext="${map.posts.title}">备战春招，面试刷题跟他复习，一个月全搞定！</a>
-                            <span class="badge badge-secondary bg-primary" th:if="${map.posts.type==1}">置顶</span>
-                            <span class="badge badge-secondary bg-danger" th:if="${map.posts.status==1}">精华</span>
-                        </h6>
-                        <div class="text-muted font-size-12">
-                            <u class="mr-3" th:utext="${map.user.username}">寒江雪</u> 发布于 <b
-                                th:text="${#dates.format(map.posts.createTime,'yyyy-MM-dd HH:mm:ss')}">2019-04-15
-                            15:32:18</b>
-                            <ul class="d-inline float-right">
-                                <li class="d-inline ml-2">赞 <span th:text="${map.likeCount}">11</span></li>
-                                <li class="d-inline ml-2">|</li>
-                                <li class="d-inline ml-2">回帖 <span th:text="${map.posts.commentCount}">7</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-            <!-- 分页 -->
-            <nav class="mt-5" th:if="${page.rows>0}" th:fragment="pagination">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item"><a class="page-link" th:href="@{${page.path}(current=1)}">首页</a></li>
-                    <li th:class="|page-item ${page.current==1?'disabled':''}|"><a class="page-link" th:href="@{${page.path}(current=${page.current-1})}">上一页</a></li>
-                    <li th:class="|page-item ${i==page.current?'active':''}|" th:each="i:${#numbers.sequence(page.from,page.to)}"><a class="page-link" th:href="@{${page.path}(current=${i})}" th:text="${i}">1</a></li>
-                    <li th:class="|page-item ${page.current==page.total?'disabled':''}|"><a class="page-link" th:href="@{${page.path}(current=${page.current+1})}">下一页</a></li>
-                    <li class="page-item"><a class="page-link" th:href="@{${page.path}(current=${page.total})}">末页</a></li>
-                </ul>
-            </nav>
-        </div>
     </div>
+    
 
     <!-- 尾部 -->
     <footer class="bg-dark" th:fragment="footer">
-
+f
     </footer>
-     <!--侧边文件列表 废案   
-    <div class="nk-container">
-        <div class="card bg-light mb-3 col col-lg-3" style="max-width: 18rem;">
-            <div class="card-header bg-transparent border-info">&nbsp;</div>
-            <div class="card-body">
-                <h6 class="row card-title">
-                    <div class="col text-muted"><i class="bi bi-file-earmark-arrow-down-fill text-muted"></i>&nbsp;文件
-                    </div>
-                    <a href="#" class="text-muted" style="text-decoration: none">100&nbsp;<i
-                            class="bi bi-box-arrow-right"></i></a>
-                </h6>
-                <ul class="list-group">
-                    <li class="list-group-item list-group-item-light">
-
-                    </li>
-                </ul>
-            </div>
-        </div>
     </div>
-    -->
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
@@ -220,5 +271,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
 <script th:src="@{js/global.js}"></script>
 <script th:src="@{js/index.js}"></script>
+<script th:src="@{js/downLoad.js}"></script>
+
 </body>
 </html>

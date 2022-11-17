@@ -7,7 +7,7 @@
     <select id="selectUploadedFiles" resultType="UploadFile">
         select id, file_name, file_size, file_url, file_type, owner_id, upload_time, download_cnt
         from upload_file
-        order by upload_time
+        order by upload_time desc 
         limit #{offset},#{limit};
     </select>
     
@@ -20,4 +20,23 @@
         insert into upload_file (file_name, file_size, file_url, file_type, owner_id, upload_time, download_cnt)
         values (#{fileName},#{fileSize},#{fileUrl},#{fileType},#{ownerId},#{uploadTime},#{downloadCnt});
     </insert>
+    
+    <update id="downloadFile">
+        update upload_file
+        set download_cnt = download_cnt + 1
+        where id = #{id};
+    </update>
+
+    <select id="searchFileByFileId" resultType="UploadFile">
+        select id, file_name, file_size, file_url, file_type, owner_id, upload_time, download_cnt
+        from upload_file
+        where id = #{id};
+    </select>
+
+    <select id="selectFilesToSideBar" resultType="UploadFile">
+        select id, file_name, file_size, file_url, file_type, owner_id, upload_time, download_cnt
+        from upload_file
+        order by upload_time desc
+        limit 5;
+    </select>
 </mapper>

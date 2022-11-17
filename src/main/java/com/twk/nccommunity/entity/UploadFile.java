@@ -21,7 +21,7 @@ public class UploadFile {
     // 文件名
     private String fileName;
     // 文件大小 ~ KB
-    private int fileSize;
+    private double fileSize;
     // 文件地址
     private String fileUrl;
     // 文件类型

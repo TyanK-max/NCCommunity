@@ -283,4 +283,17 @@ public class UserController implements CommunityConstant {
         model.addAttribute("comments", commentMap);
         return "site/my-reply";
     }
+    
+    @RequestMapping(path = "/userInfo/{userId}",method = RequestMethod.POST)
+    @ResponseBody
+    public String getUserById(@PathVariable("userId") int userId){
+        User user = userService.findUserById(userId);
+        if(user == null){
+            throw new IllegalStateException("无法查到到该用户");
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("userName",user.getUsername());
+        return CommunityUtils.getJSONString(0,"success",map);
+    }
+    
 }

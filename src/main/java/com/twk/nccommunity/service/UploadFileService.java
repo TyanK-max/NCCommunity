@@ -17,16 +17,28 @@ import java.util.List;
 public class UploadFileService {
     @Autowired
     private UploadFileMapper uploadFileMapper;
-    
-    public List<UploadFile> searchAllFile(int offset,int limit){
-        return uploadFileMapper.selectUploadedFiles(offset,limit);
-    } 
-    
-    public int getFileRows(){
+
+    public List<UploadFile> searchAllFile(int offset, int limit) {
+        return uploadFileMapper.selectUploadedFiles(offset, limit);
+    }
+
+    public int getFileRows() {
         return uploadFileMapper.selectUploadedFileRows();
     }
-    
-    public int addUploadFile(UploadFile uploadFile){
+
+    public int addUploadFile(UploadFile uploadFile) {
         return uploadFileMapper.insertUploadFile(uploadFile);
+    }
+
+    public int addDownloadCnt(int fileId) {
+        return uploadFileMapper.downloadFile(fileId);
+    }
+    
+    public UploadFile findFileById(int fileId){
+        return uploadFileMapper.searchFileByFileId(fileId);
+    }
+    
+    public List<UploadFile> searchFilesToSideBar(){
+        return uploadFileMapper.selectFilesToSideBar();
     }
 }

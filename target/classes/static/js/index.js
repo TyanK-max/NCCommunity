@@ -1,5 +1,14 @@
 $(function(){
 	$("#publishBtn").click(publish);
+	$("#recipient-name").blur(
+		function () {
+			var title = $("#recipient-name").val();
+			if(title == null){
+				$("#title-feedback").css({display:block});
+				return false;
+			}
+		}
+	);
 });
 
 function publish() {

@@ -19,4 +19,10 @@ public interface UploadFileMapper {
     int selectUploadedFileRows();
     // 上传文件
     int insertUploadFile(UploadFile uploadFile);
+    // 下载文件 增加下载次数
+    int downloadFile(@Param("id") int id);
+    // 根据ID获取文件信息
+    UploadFile searchFileByFileId(@Param("id") int id);
+    // 侧边栏显示
+    List<UploadFile> selectFilesToSideBar();
 }

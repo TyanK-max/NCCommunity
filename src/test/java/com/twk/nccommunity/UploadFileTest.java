@@ -31,4 +31,11 @@ public class UploadFileTest {
         uploadFileService.addUploadFile(file);
     }
     
+    
+    @Test
+    public void testSplit(){
+        String url = "http://rl226mtic.bkt.clouddn.com/6bc228905fe54d12955f56cb6a6de6ca";
+        String[] split = url.split("/");
+        System.out.println(split[split.length - 1]);
+    }
 }
