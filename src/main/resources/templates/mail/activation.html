@@ -1,19 +1,19 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-	<link rel="icon" href="http://rkemlk0l5.hn-bkt.clouddn.com/b85ea5b3a27a34d6b5f14a5d836deb34.png"/>
-    <title>牛客网-激活账号</title>
+	<link rel="icon" href="https://tyank-site-bucket-1305101949.cos.ap-guangzhou.myqcloud.com/resource/202304271853632.png"/>
+    <title>Pantheon-激活邮件</title>
 </head>
 <body>
 	<div>
 		<p>
-			<b th:text="${email}">xxx@xxx.com</b>, 您好!
+			尊敬的 <b th:text="${email}">xxx@xxx.com</b> 用户, 您好!
 		</p>
 		<p>
-			您正在注册牛客网, 这是一封激活邮件, 请点击 
+			您正在注册"智会于此"论坛, 这是一封激活邮件, 请点击 
 			<a th:href="${url}">此链接</a>,
-			激活您的牛客账号!
+			以激活您的论坛账号!
 		</p>
 	</div>
 </body>

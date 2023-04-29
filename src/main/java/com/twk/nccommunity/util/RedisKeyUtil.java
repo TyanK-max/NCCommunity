@@ -1,5 +1,7 @@
 package com.twk.nccommunity.util;
 
+import com.twk.nccommunity.entity.User;
+
 public class RedisKeyUtil {
     private static final String SPLIT = ":";
     private static final String PREFIX_ENTITY_LIKE = "like:entity";
@@ -12,6 +14,7 @@ public class RedisKeyUtil {
     private static final String PREFIX_UV = "uv";
     private static final String PREFIX_DAU = "dau";
     private static final String PREFIX_POST = "post";
+    private static final String PREFIX_RESETCODE = "reset";
 
     // like:entity:entityType:entityId --> set(userId)
     public static String getEntityLikeKey(int entityType,int entityId){
@@ -62,4 +65,5 @@ public class RedisKeyUtil {
         return PREFIX_POST + SPLIT + "score";
     }
 
+    public static String getResetcodeKey(String email){return PREFIX_RESETCODE + SPLIT + email;}
 }

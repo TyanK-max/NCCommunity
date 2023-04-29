@@ -41,6 +41,7 @@ public class DiscussPostController implements CommunityConstant {
     HostHolder holder;
     @Autowired
     RedisTemplate redisTemplate;
+    
     @RequestMapping(path = "/add",method = RequestMethod.POST)
     @ResponseBody
     public String addDiscussPost(String title,String content){

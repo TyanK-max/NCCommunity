@@ -11,6 +11,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.util.concurrent.TimeUnit;
+
 @SpringBootTest
 @ContextConfiguration(classes = NcCommunityApplication.class)
 public class RedisTest {
@@ -19,11 +21,9 @@ public class RedisTest {
 
     @Test
     public void testValue(){
-        String redisKey = "test:stu";
-        redisTemplate.opsForValue().set(redisKey,1);
-
-        System.out.println(redisTemplate.opsForValue().increment(redisKey));
-        System.out.println(redisTemplate.opsForValue().decrement(redisKey));
+        String redisKey = "reset:34531@qq.com";
+        redisTemplate.opsForValue().set(redisKey,"code",60,TimeUnit.SECONDS);
+        System.out.println(redisTemplate.opsForValue().get(redisKey));
     }
 
     @Test

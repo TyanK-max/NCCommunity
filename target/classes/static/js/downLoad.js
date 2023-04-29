@@ -41,21 +41,6 @@ function getFileInfo() {
 }
 
 function downLoadFile() {
-    var fileName = $("#fileName").val();
-    var url = $("#downLoadBtn").attr("href");
-    const x = new XMLHttpRequest()
-    x.open("GET", url, true)
-    x.responseType = 'blob'
-    x.onload=function(e) {
-        const url = window.URL.createObjectURL(x.response)
-        const a = document.createElement('a')
-        a.href = url
-        a.target = '_blank'
-        a.download = fileName
-        a.click()
-        a.remove()
-    }
-    x.send();
     $.post(
         CONTEXT_PATH + "/files/downLoad",
         {"fileId":$("#fileId").val()},

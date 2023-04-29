@@ -36,6 +36,7 @@ public class ElasticsearchService {
     public void deleteDiscussPost(int id){
         discussPostRepository.deleteById(id);
     }
+    
     public List<Object> searchDiscussPost(String keyword, int current, int limit){
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(QueryBuilders.multiMatchQuery(keyword,"title","content"))
@@ -47,7 +48,7 @@ public class ElasticsearchService {
                         new HighlightBuilder.Field("title").preTags("<em>").postTags("</em>"),
                         new HighlightBuilder.Field("content").preTags("<em>").postTags("</em>")
                 ).build();
-
+        
         SearchHits<DiscussPost> search = elasticsearchRestTemplate.search(searchQuery, DiscussPost.class);
         List<SearchHit<DiscussPost>> searchHits = search.getSearchHits();
         ArrayList<DiscussPost> discussPosts = new ArrayList<>();

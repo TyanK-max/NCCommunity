@@ -5,8 +5,6 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.DigestUtils;
-
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 

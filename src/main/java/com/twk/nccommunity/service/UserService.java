@@ -1,5 +1,7 @@
 package com.twk.nccommunity.service;
 
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.twk.nccommunity.dao.LoginTicketMapper;
 import com.twk.nccommunity.dao.UserMapper;
 import com.twk.nccommunity.entity.DiscussPost;
@@ -20,6 +22,7 @@ import org.thymeleaf.context.Context;
 import sun.swing.StringUIClientPropertyKey;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService implements CommunityConstant {
@@ -34,10 +37,7 @@ public class UserService implements CommunityConstant {
 
     @Autowired
     private RedisTemplate redisTemplate;
-
-//    @Autowired
-//    LoginTicketMapper loginTicketMapper;
-
+    
     @Value("${community.path.domain}")
     private String domain;
 
@@ -103,12 +103,58 @@ public class UserService implements CommunityConstant {
         context.setVariable("email", user.getEmail());
         String url = domain + contextPath + "/activation/" + user.getId() + "/" + user.getActivationCode();
         context.setVariable("url", url);
-        String content = templateEngine.process("/mail/activation", context);
+        String content = templateEngine.process("mail/activation", context);
         mailClient.sendMail(user.getEmail(), "激活用户邮件", content);
 
         return map;
     }
 
+    /**
+     * @description: 根据邮箱重置密码
+     * @author TyanK
+     * @date 2023/4/29 11:07
+     */
+    public Map<String,Object> resetPWD(String email,String newPWD,String resetCode){
+        HashMap<String, Object> map = new HashMap<>();
+        User user = userMapper.selectByEmail(email);
+        if(user == null){
+            map.put("ERRMsg","该用户不存在");
+            return map;
+        }
+        String key = "reset:" + email;
+        Object realCode = redisTemplate.opsForValue().get(key);
+        if(!resetCode.equals(realCode)){
+            map.put("ERRMsg","验证码输入有误或已失效");
+            return map;
+        }
+        user.setPassword(CommunityUtils.md5(newPWD+user.getSalt()));
+        return map;
+    }
+    
+    public Map<String,Object> sendResetCode(String email){
+        HashMap<String, Object> map = new HashMap<>();
+        if(StrUtil.isBlank(email)){
+            map.put("emailMsg","邮箱不能为空!");
+            return map;
+        }
+        if(userMapper.selectByEmail(email) == null){
+            map.put("emailMsg","该邮箱还未注册!");
+            return map;
+        }
+        //发送邮件
+        Context context = new Context();
+        context.setVariable("email", email);
+        // 生成验证码
+        String code = RandomUtil.randomString(5);
+        String resetcodeKey = RedisKeyUtil.getResetcodeKey(email);
+        // 存于redis
+        redisTemplate.opsForValue().set(resetcodeKey,code,60, TimeUnit.SECONDS);
+        context.setVariable("code",code);
+        String content = templateEngine.process("mail/forget", context);
+        mailClient.sendMail(email, "Pantheon-重置用户密码邮件", content);
+        return map;
+    }
+    
     /**
      * 激活用户功能
      *

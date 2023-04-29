@@ -1,5 +1,7 @@
 package com.twk.nccommunity.controller;
 
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
 import com.google.code.kaptcha.Producer;
 import com.twk.nccommunity.entity.User;
 import com.twk.nccommunity.service.UserService;
@@ -9,20 +11,16 @@ import com.twk.nccommunity.util.RedisKeyUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Map;
@@ -37,9 +35,9 @@ public class LoginController implements CommunityConstant {
     private Producer producer;
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
-    @Value("${spring.thymeleaf.content-type}")
+    @Value("${server.servlet.context-path}")
     private String contextPath;
 
     @RequestMapping(path = "/register",method = RequestMethod.GET)
@@ -47,6 +45,11 @@ public class LoginController implements CommunityConstant {
         return "site/register";
     }
 
+    @RequestMapping(path = "/forget",method = RequestMethod.GET)
+    public String getForgetPage(){
+        return "site/forget";
+    }
+    
     @RequestMapping(path = "/login",method = RequestMethod.GET)
     public String getLoginPage(){
         return "site/login";
@@ -67,6 +70,34 @@ public class LoginController implements CommunityConstant {
         }
     }
 
+    @RequestMapping(path = "/forget",method = RequestMethod.POST)
+    public String forgotPWD(Model model, String email,String newPWD,String resetCode){
+        Map<String, Object> map = userService.resetPWD(email, newPWD, resetCode);
+        if (map.isEmpty()) {
+            model.addAttribute("msg","重置密码成功，您的账号可以正常登录了！");
+            model.addAttribute("target","/login");
+            return "site/operate-result";
+        }else {
+            model.addAttribute("ERRMsg", map.get("ERRMsg"));
+            return "site/forget";
+        }
+    }
+
+    /**
+     * @description: 发送验证码ctl
+     * @author TyanK
+     * @date 2023/4/29 11:42
+     */
+    @RequestMapping(path = "/resetCode/{email}",method = RequestMethod.POST)
+    @ResponseBody
+    public String sendEmailCode(@PathVariable("email") String email){
+        Map<String, Object> map = userService.sendResetCode(email);
+        if(map.isEmpty() || map == null){
+            return CommunityUtils.getJSONString(0,"验证码发送成功");
+        }
+        return CommunityUtils.getJSONString(1,"操作失败，请检查邮箱是否输入正确",map);
+    }
+    
     @RequestMapping(path = "/activation/{userId}/{code}",method = RequestMethod.GET)
     public String activation(Model model,@PathVariable("userId") int userId,@PathVariable("code") String code){
         int result = userService.activation(userId, code);
@@ -114,7 +145,7 @@ public class LoginController implements CommunityConstant {
         String kaptcha = null;
         if(StringUtils.isNotBlank(kaptchaOwner)) {
             String kaptchaKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
-            kaptcha = (String) redisTemplate.opsForValue().get(kaptchaKey);
+            kaptcha = redisTemplate.opsForValue().get(kaptchaKey);
         }
         if(StringUtils.isBlank(kaptcha) || StringUtils.isBlank(code) || !code.equalsIgnoreCase(kaptcha)){
             model.addAttribute("codeMsg","验证码输入有误!");

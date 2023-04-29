@@ -1,18 +1,18 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-	<link rel="icon" href="http://rkemlk0l5.hn-bkt.clouddn.com/b85ea5b3a27a34d6b5f14a5d836deb34.png"/>
-    <title>牛客网-忘记密码</title>
+	<link rel="icon" href="https://tyank-site-bucket-1305101949.cos.ap-guangzhou.myqcloud.com/resource/202304271853632.png"/>
+    <title>Pantheon-重置密码</title>
 </head>
 <body>
 	<div>
 		<p>
-			<b>xxx@xxx.com</b>, 您好!
+			尊敬的<b th:text="${email}">xxx@xxx.com</b>用户, 您好!
 		</p>
 		<p>
-			您正在找回牛客账号的密码, 本次操作的验证码为 <b>u5s6dt</b> , 
-			有效时间5分钟, 请您及时进行操作!
+			您正在进行找回Pantheon论坛账号密码的操作, 本次操作的验证码为 <b th:text="${code}">u5s6dt</b> , 
+			验证码有效时间为60秒, 请您及时进行操作!
 		</p>
 	</div>
 </body>

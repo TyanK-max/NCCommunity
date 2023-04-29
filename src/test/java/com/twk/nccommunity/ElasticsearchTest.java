@@ -53,20 +53,20 @@ public class ElasticsearchTest {
     @Autowired
     private RestHighLevelClient restHighLevelClient;
 
-//    @Test
-//    public void insertAll(){
-//        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(101,0,100));
-//        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(102,0,100));
-//        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(103,0,100));
-//        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(111,0,100));
-//        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(112,0,100));
-//        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(131,0,100));
-//        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(132,0,100));
-//        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(133,0,100));
-//        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(134,0,100));
-//        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(156,0,100));
-//        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(149,0,100));
-//    }
+   @Test
+   public void insertAll(){
+       discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(101,0,100,0));
+       discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(102,0,100,0));
+       discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(103,0,100,0));
+       discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(111,0,100,0));
+       discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(112,0,100,0));
+       discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(131,0,100,0));
+       discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(132,0,100,0));
+       discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(133,0,100,0));
+       discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(134,0,100,0));
+       discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(156,0,100,0));
+       discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(149,0,100,0));
+   }
 
     @Test
     public void testSearchByRepository() throws IOException {
