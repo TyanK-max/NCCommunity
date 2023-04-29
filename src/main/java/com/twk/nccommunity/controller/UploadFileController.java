@@ -63,6 +63,7 @@ public class UploadFileController {
     }
     
     @RequestMapping(path = "/upload",method = RequestMethod.POST)
+    @ResponseBody
     public String addUploadFile(String UUID,String fileName, double fileSize, String fileType){
         int ownId = holder.getUsers().getId();
         fileSize = (double) Math.round((fileSize/1024) * 100)/100;

@@ -45,6 +45,7 @@ function publish() {
 					CONTEXT_PATH + "/files/upload",
 					{'UUID':$("input[name='key']").val(),'fileName':image.name,'fileSize':image.size,'fileType':image.type},
 					function (data) {
+						data = $.parseJSON(data);
 						if(data.code === 0){
 							alert("上传成功！");
 						}else{
