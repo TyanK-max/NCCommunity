@@ -33,7 +33,7 @@ public class MessageService {
     }
     public int addMessage(Message message) {
         message.setContent(HtmlUtils.htmlEscape(message.getContent()));
-        message.setContent(sensitiveFilter.goToFilter(message.getContent()));
+        // message.setContent(sensitiveFilter.goToFilter(message.getContent()));
         return messageMapper.insertMessage(message);
     }
     public int readMessage(List<Integer> ids){

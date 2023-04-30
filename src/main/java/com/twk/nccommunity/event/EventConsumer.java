@@ -1,5 +1,6 @@
 package com.twk.nccommunity.event;
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.twk.nccommunity.entity.DiscussPost;
 import com.twk.nccommunity.entity.Event;
@@ -47,7 +48,7 @@ public class EventConsumer implements CommunityConstant {
         message.setFromId(SYSTEM_USER_ID);
         message.setToId(event.getEntityUserId());
         message.setConversationId(event.getTopic());
-        message.setCreateTime(new Date());
+        message.setCreateTime(DateUtil.offsetHour(new Date(),8));
         Map<String, Object> content = new HashMap<>();
         content.put("userId",event.getUserId());
         content.put("entityType",event.getEntityType());

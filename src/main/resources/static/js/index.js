@@ -24,23 +24,25 @@ function publish() {
 		data:new FormData($("#uploadForm")[0]),
 		success: function (data) {
 			if(data && data.code === 0){
-				$.post(
-					CONTEXT_PATH + "/discuss/add",
-					{"title":title,"content":content},
-					function (data) {
-						data = $.parseJSON(data);
-						$("#hintBody").text(data.msg);
-						$("#hintModal").modal("show")
-						setTimeout(function(){
-							$("#hintModal").modal("hide");
-							if(data.code === 0){
-								window.location.reload();
-							}else {
-								alert("发布帖子失败");
-							}
-						}, 2000);
-					}
-				);
+				if(title !== ''){
+					$.post(
+						CONTEXT_PATH + "/discuss/add",
+						{"title":title,"content":content},
+						function (data) {
+							data = $.parseJSON(data);
+							$("#hintBody").text(data.msg);
+							$("#hintModal").modal("show")
+							setTimeout(function(){
+								$("#hintModal").modal("hide");
+								if(data.code === 0){
+									window.location.reload();
+								}else {
+									alert("发布帖子失败");
+								}
+							}, 2000);
+						}
+					);
+				}
 				$.post(
 					CONTEXT_PATH + "/files/upload",
 					{'UUID':$("input[name='key']").val(),'fileName':image.name,'fileSize':image.size,'fileType':image.type},

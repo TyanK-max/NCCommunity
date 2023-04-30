@@ -73,7 +73,7 @@ public class UploadFileController {
                 .fileSize(fileSize)
                 .fileType(fileType)
                 .ownerId(ownId)
-                .uploadTime(DateUtil.date())
+                .uploadTime(DateUtil.offsetHour(new Date(),8))
                 .fileUrl(url)
                 .build();
         uploadFileService.addUploadFile(file);

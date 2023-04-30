@@ -38,7 +38,7 @@ public class CommentService implements CommunityConstant {
             throw new IllegalArgumentException("评论内容不能为空!");
         }
         comment.setContent(HtmlUtils.htmlEscape(comment.getContent()));
-        comment.setContent(sensitiveFilter.goToFilter(comment.getContent()));
+        // comment.setContent(sensitiveFilter.goToFilter(comment.getContent()));
         int rows = commentMapper.insertComment(comment);
         if(comment.getEntityType() == ENTITY_TYPE_POST){
             int count = commentMapper.selectCommentCount(comment.getEntityType(), comment.getEntityId());

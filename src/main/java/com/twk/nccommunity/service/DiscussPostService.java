@@ -1,5 +1,6 @@
 package com.twk.nccommunity.service;
 
+import cn.hutool.core.util.StrUtil;
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
@@ -105,8 +106,12 @@ public class DiscussPostService {
         post.setTitle(HtmlUtils.htmlEscape(post.getTitle()));
         post.setContent(HtmlUtils.htmlEscape(post.getContent()));
 
-        post.setTitle(sensitiveFilter.goToFilter(post.getTitle()));
-        post.setContent(sensitiveFilter.goToFilter(post.getContent()));
+        // if(StrUtil.isNotBlank(post.getTitle())){
+        //     post.setTitle(sensitiveFilter.goToFilter(post.getTitle()));
+        // }
+        // if(StrUtil.isNotBlank(post.getContent())){
+        //     post.setContent(sensitiveFilter.goToFilter(post.getContent()));
+        // }
         return discussPostMapper.insertDiscussPost(post);
     }
 

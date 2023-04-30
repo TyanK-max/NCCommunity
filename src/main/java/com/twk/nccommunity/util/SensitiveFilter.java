@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class SensitiveFilter {
     public String goToFilter(String text){
         TrieFilter trieFilter = new TrieFilter();
-        trieFilter.batchAdd("sensitive-words");
+        trieFilter.batchAdd("sensitive-words.txt");
         return trieFilter.filter(text, '*');
     }
 }
